@@ -1,34 +1,38 @@
-% Cargo, Rust’s Package Manager
+% Cargo - менеджер пакетов для языка программирования Rust.
 
-# Installing
+# Установка
 
-The easiest way to get Cargo is to get the current stable release of Rust by
-using the `rustup` script:
+Самый простой способ установить Cargo, это скачать последнюю стабильную версию Rust
+используя `rustup` скрипт:
 
 ```shell
 $ curl -sSf https://static.rust-lang.org/rustup.sh | sh
 ```
 
-This will get you the current stable release of Rust for your platform along
-with the latest Cargo.
+После выполнения данного скрипта вы получите последнюю стабильную версию Rust для вашей платформы, а так же последнюю версию Cargo.
 
-If you are on Windows, you can directly download the latest 32bit ([Rust](https://static.rust-lang.org/dist/rust-1.0.0-i686-pc-windows-gnu.msi)
-and [Cargo](https://static.rust-lang.org/cargo-dist/cargo-nightly-i686-pc-windows-gnu.tar.gz)) or 64bit ([Rust](https://static.rust-lang.org/dist/rust-1.0.0-x86_64-pc-windows-gnu.msi) and [Cargo](https://static.rust-lang.org/cargo-dist/cargo-nightly-x86_64-pc-windows-gnu.tar.gz)) Rust stable releases or Cargo nightlies.
+Если вы используете операционную систему Windows, вы можете скачать установщики последней стабильной версии Rust и ночную сборку Cargo. 32-х битная версия ([Rust](https://static.rust-lang.org/dist/rust-1.0.0-i686-pc-windows-gnu.msi)
+и [Cargo](https://static.rust-lang.org/cargo-dist/cargo-nightly-i686-pc-windows-gnu.tar.gz)) или 64-х битная версия ([Rust](https://static.rust-lang.org/dist/rust-1.0.0-x86_64-pc-windows-gnu.msi) и [Cargo](https://static.rust-lang.org/cargo-dist/cargo-nightly-x86_64-pc-windows-gnu.tar.gz))
 
-Alternatively, you can build Cargo from source.
+Вы так же можете собрать Cargo из исходного кода.
 
-# Let’s get started
+Чтобы убедиться, что установка прошла успешно, можно воспользоваться командой, которая выводит версию Cargo:
+```shell
+$ cargo --version
+```
 
-To start a new project with Cargo, use `cargo new`:
+# Давайте начнем
+
+Чтобы создать новый проект при помощи Cargo, необходимо воспользоваться командой `cargo new`:
 
 ```shell
 $ cargo new hello_world --bin
 ```
 
-We’re passing `--bin` because we’re making a binary program: if we
-were making a library, we’d leave it off.
+Мы передали аргумент `--bin`, потому что мы создаем исполняемую программу: если мы
+решим создать библиотеку, то этот аргумент необходимо убрать.
 
-Let’s check out what Cargo has generated for us:
+Давайте посмотрим, что Cargo сгенерировал для нас:
 
 ```shell
 $ cd hello_world
@@ -41,7 +45,7 @@ $ tree .
 1 directory, 2 files
 ```
 
-This is all we need to get started. First, let’s check out `Cargo.toml`:
+Это все, что нам необходимо для начала. Первым делом давайте посмотрим, что за файл `Cargo.toml`:
 
 ```toml
 [package]
@@ -50,10 +54,10 @@ version = "0.1.0"
 authors = ["Your Name <you@example.com>"]
 ```
 
-This is called a **manifest**, and it contains all of the metadata that Cargo
-needs to compile your project.
+Этот файл называется **манифестом** и содержит в себе все метаданные, которые необходимы Cargo,
+чтобы скомпилировать ваш проект.
 
-Here’s what’s in `src/main.rs`:
+Вот, что мы найдем в файле `src/main.rs`:
 
 ```
 fn main() {
@@ -61,20 +65,20 @@ fn main() {
 }
 ```
 
-Cargo generated a “hello world” for us. Let’s compile it:
+Cargo сгенерировал “hello world” для нас. Давайте скомпилируем его:
 
 <pre><code class="language-shell">$ cargo build
 <span style="font-weight: bold"
 class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello_world)</code></pre>
 
-And then run it:
+А потом запустим:
 
 ```shell
 $ ./target/debug/hello_world
 Hello, world!
 ```
 
-We can also use `cargo run` to compile and then run it, all in one step:
+Вы так же можете использовать `cargo run`, чтобы скомпилировать и запустить проект. Все за одну команду:
 
 <pre><code class="language-shell">$ cargo run
 <span style="font-weight: bold"
@@ -83,6 +87,6 @@ class="s1">     Fresh</span> hello_world v0.1.0 (file:///path/to/project/hello_w
 class="s1">   Running</span> `target/hello_world`
 Hello, world!</code></pre>
 
-# Going further
+# Двигаемся дальше
 
-For more details on using Cargo, check out the [Cargo Guide](guide.html)
+Чтобы получить более подробную информацию о использование Cargo, ознакомьтесь с [Руководством по Cargo](guide.html)
