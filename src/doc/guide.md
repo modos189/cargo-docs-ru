@@ -1,33 +1,30 @@
-% Cargo Guide
+% Руководство по Cargo
 
-Welcome to the Cargo guide. This guide will give you all that you need to know
-about how to use Cargo to develop Rust projects.
+Добро пожаловать в руководство по Cargo. Это руководство даст вам все необходимое, чтобы вы могли использовать Cargo для разработки проектов на языке программирования Rust.
 
-# Why Cargo exists
+# Зачем нужен Cargo? 
 
-Cargo is a tool that allows Rust projects to declare their various
-dependencies and ensure that you’ll always get a repeatable build.
+Cargo - это инструмент, который позволяет указывать необходимые зависимости для проектов на языке Rust и убедиться, что вы получите воспроизводимые сборки.
 
-To accomplish this goal, Cargo does four things:
+Для достижения этих целей, Cargo выполняет следующие действия:
 
-* Introduces two metadata files with various bits of project information.
-* Fetches and builds your project’s dependencies.
-* Invokes `rustc` or another build tool with the correct parameters to build your project.
-* Introduces conventions to make working with Rust projects easier.
+* Создает два файла с некоторой необходимой информацией о проекте.
+* Получает и собирает зависимости вашего проекта.
+* Запускает `rustc` или другие инструменты сборки со всеми необходимыми параметрами для правильной сборки вашего проекта.
+* Предоставляет все необходимые условия, чтобы работа с проектами на Rust стала проще.
 
-# Creating a new project
+# Создание нового проекта
 
-To start a new project with Cargo, use `cargo new`:
+Для создания нового проекта с помощью Cargo, воспользуйтесь командой `cargo new`:
 
 ```shell
 $ cargo new hello_world --bin
 ```
 
-We’re passing `--bin` because we’re making a binary program: if we
-were making a library, we’d leave it off. This also initializes a new `git`
-repository by default. If you don't want it to do that, pass `--vcs none`.
+Мы передали аргумент `--bin`, потому что мы создаем исполняемую программу: если мы
+решим создать библиотеку, то этот аргумент необходимо убрать. Эта команда по умолчанию так же создает `git` репозиторий. Если вы этого не планировали, добавьте аргумент `--vcs none`.
 
-Let’s check out what Cargo has generated for us:
+Давайте посмотрим, что Cargo сгенерировал для нас:
 
 ```shell
 $ cd hello_world
@@ -40,9 +37,8 @@ $ tree .
 1 directory, 2 files
 ```
 
-If we had just used `cargo new hello_world` without the `--bin` flag, then
-we would have a `lib.rs` instead of a `main.rs`. For now, however, this is all
-we need to get started. First, let’s check out `Cargo.toml`:
+Если бы мы выполнили команду `cargo new hello_world` без аргумента `--bin`, тогда
+мы бы получили файл `lib.rs`, вместо `main.rs`. В данный момент это все, что нам необходимо для начала. Первым делом, давайте посмотрим, что за файл `Cargo.toml`:
 
 ```toml
 [package]
@@ -51,10 +47,10 @@ version = "0.1.0"
 authors = ["Your Name <you@example.com>"]
 ```
 
-This is called a **manifest**, and it contains all of the metadata that Cargo
-needs to compile your project.
+Этот файл называется **манифестом** и содержит в себе все метаданные, которые необходимы Cargo,
+чтобы скомпилировать ваш проект.
 
-Here’s what’s in `src/main.rs`:
+Вот, что мы найдем в файле `src/main.rs`:
 
 ```
 fn main() {
@@ -62,22 +58,20 @@ fn main() {
 }
 ```
 
-Cargo generated a “hello world” for us. Let’s compile it:
+Cargo сгенерировал “hello world” для нас. Давайте скомпилируем его:
 
 <pre><code class="language-shell"><span class="gp">$</span> cargo build
 <span style="font-weight: bold"
 class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello_world)</code></pre>
 
-And then run it:
+А затем запустите его:
 
 ```shell
 $ ./target/debug/hello_world
 Hello, world!
 ```
 
-We can also use `cargo run` to compile and then run it, all in one step (You
-won't see the `Compiling` line if you have not made any changes since you last
-compiled):
+Вы так же можете использовать `cargo run`, чтобы скомпилировать и запустить проект. Все за одну команду. (Вы не увидите фразу `Compiling`, если вы не вносили каких-либо изменений в исходный код, с момента последней компиляции):
 
 <pre><code class="language-shell"><span class="gp">$</span> cargo run
 <span style="font-weight: bold"
@@ -86,73 +80,61 @@ class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello
 class="s1">   Running</span> `target/debug/hello_world`
 Hello, world!</code></pre>
 
-You’ll now notice a new file, `Cargo.lock`. It contains information about our
-dependencies. Since we don’t have any yet, it’s not very interesting.
+Теперь вы увидите новый файл - `Cargo.lock`. Он содержит в себе информацию о зависимостях проекта. Т.к мы еще не добавили зависимости, для нас это, пока, не очень интересно.
 
-Once you’re ready for release, you can use `cargo build --release` to compile your files with optimizations turned on:
+После того, как вы закончите работу над программой и будете готовы выпустить релизную версию, вы можете воспользоваться командой `cargo build --release`, чтобы скомпилировать ваш проект с включенной оптимизацией:
 
 <pre><code class="language-shell"><span class="gp">$</span> cargo build --release
 <span style="font-weight: bold"
 class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello_world)</code></pre>
 
-`cargo build --release` puts the resulting binary in
-`target/release` instead of `target/debug`.
+`cargo build --release` создаст исполняемый файл в директории
+`target/release`, вместо `target/debug`.
 
-Compiling in debug mode is the default for development-- compilation time is
-shorter since the compiler doesn't do optimizations, but the code will run
-slower. Release mode takes longer to compile, but the code will run faster.
+Компиляция в режиме дебага является стандартной при разработке, т.к компилятору необходимо меньше времени на компиляцию проекта, из-за выключенной оптимизации кода, но исполняемый файл будет работать медленнее. Релизная версия требует больше времени для сборки проекта, но финальный результат будет работать быстрее.
 
-# Working on an existing Cargo project
+# Работа с существующим Cargo проектом
 
-If you download an existing project that uses Cargo, it’s really easy
-to get going.
+Если вы скачиваете существующий проект, который использует Cargo, то начать работу с ним будет очень просто.
 
-First, get the project from somewhere. In this example, we’ll use `rand`
-cloned from its repository on GitHub:
+Для начала, давайте загрузим какой-либо проект. В данном примере мы воспользуемся `rand`. Заберем копию его репозиторий с GitHub:
 
 ```sh
 $ git clone https://github.com/rust-lang-nursery/rand.git
 $ cd rand
 ```
 
-To build, use `cargo build`:
+Чтобы собрать `rand` воспользуемся командой `cargo build`:
 
 <pre><code class="language-shell"><span class="gp">$</span> cargo build
 <span style="font-weight: bold" class="s1">   Compiling</span> rand v0.1.0 (file:///path/to/project/rand)</code></pre>
 
-This will fetch all of the dependencies and then build them, along with the
-project.
+Cargo получит все зависимости для данного проекта, а затем соберет их вместе с проектом.
 
-# Adding dependencies from crates.io
+# Добавление зависимостей из crates.io
 
-[crates.io] is the Rust community's central repository that serves
-as a location to discover and download packages. `cargo` is configured to use
-it by default to find requested packages.
+[crates.io] - это центральный репозиторий сообщества Rust, который служит в качестве хранилища, в котором можно найти и загрузить необходимые пакеты. `cargo` настроен так, что использует данный репозиторий по умолчанию.
 
-To depend on a library hosted on [crates.io], add it to your `Cargo.toml`.
+Чтобы добавить зависимую библиотеку, которая расположена на [crates.io], просто добавьте ее в ваш `Cargo.toml`.
 
 [crates.io]: https://crates.io/
 
-## Adding a dependency
+## Добавление зависимостей
 
-If your `Cargo.toml` doesn't already have a `[dependencies]` section, add that,
-then list the crate name and version that you would like to use. This example
-adds a dependency of the `time` crate:
+Если в вашем `Cargo.toml` еще нет раздела `[dependencies]`, добавьте его,
+затем перечислите контейнеры и их версии, которые вы хотите использовать. В этом примере мы добавим в зависимости контейнер `time`:
 
 ```toml
 [dependencies]
 time = "0.1.12"
 ```
 
-The version string is a [semver] version requirement. The [specifying
-dependencies](specifying-dependencies.html) docs have more information about
-the options you have here.
+Строка версии должна соответствовать [семантическому версионированию]. В документе [определение зависимостей](specifying-dependencies.html), вы найдете больше информации о всех возможностях, которые вам предоставлены.
 
-[semver]: https://github.com/steveklabnik/semver#requirements
+[семантическому версионированию]: https://github.com/steveklabnik/semver#requirements
 
-If we also wanted to add a dependency on the `regex` crate, we would not need
-to add `[dependencies]` for each crate listed. Here's what your whole
-`Cargo.toml` file would look like with dependencies on the `time` and `regex`
+Если нам так же необходимо добавить новый контейнер, как зависимость, например, `regex`, нам не нужно добавлять блок `[dependencies]` каждый раз. Посмотрите, как выглядит наш
+`Cargo.toml` файл, в котором перечислены две зависимости - `time` и `regex`
 crates:
 
 ```toml
@@ -166,8 +148,7 @@ time = "0.1.12"
 regex = "0.1.41"
 ```
 
-Re-run `cargo build`, and Cargo will fetch the new dependencies and all of
-their dependencies, compile them all, and update the `Cargo.lock`:
+Запустите заново `cargo build`, и Cargo загрузит все новые зависимости, а так же их зависимости. Скомпилирует эти зависимости и обновит `Cargo.lock`:
 
 <pre><code class="language-shell"><span class="gp">$</span> cargo build
 <span style="font-weight: bold" class="s1">    Updating</span> registry `https://github.com/rust-lang/crates.io-index`
@@ -185,13 +166,11 @@ their dependencies, compile them all, and update the `Cargo.lock`:
 <span style="font-weight: bold" class="s1">   Compiling</span> regex v0.1.41
 <span style="font-weight: bold" class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello_world)</code></pre>
 
-Our `Cargo.lock` contains the exact information about which revision of all of
-these dependencies we used.
+Наш `Cargo.lock` хранит в себе информацию о том, какую именно версию (с ревизией) мы используем.
 
-Now, if `regex` gets updated, we will still build with the same revision until
-we choose to `cargo update`.
+Теперь, если `regex` получит обновление, мы будем собирать проект с той же версией, которая указана в `Cargo.lock`, пока не воспользуемся командой `cargo update`.
 
-You can now use the `regex` library using `extern crate` in `main.rs`.
+Теперь вы можете использовать библиотеку `regex`, используя `extern crate` в `main.rs`.
 
 ```
 extern crate regex;
@@ -204,16 +183,15 @@ fn main() {
 }
 ```
 
-Running it will show:
+Запустим этот код и увидим:
 
 <pre><code class="language-shell"><span class="gp">$</span> cargo run
 <span style="font-weight: bold" class="s1">     Running</span> `target/hello_world`
 Did our date match? true</code></pre>
 
-# Project layout
+# Схема проекта
 
-Cargo uses conventions for file placement to make it easy to dive into a new
-Cargo project:
+Cargo размещает файлы определенным образом, чтобы можно было начать работать с новым Cargo проектом:
 
 ```shell
 .
@@ -232,38 +210,31 @@ Cargo project:
     └── some-integration-tests.rs
 ```
 
-* `Cargo.toml` and `Cargo.lock` are stored in the root of your project.
-* Source code goes in the `src` directory.
-* The default library file is `src/lib.rs`.
-* The default executable file is `src/main.rs`.
-* Other executables can be placed in `src/bin/*.rs`.
-* Integration tests go in the `tests` directory (unit tests go in each file they're testing).
-* Example executable files go in the `examples` directory.
-* Benchmarks go in the `benches` directory.
+* `Cargo.toml` и `Cargo.lock` размещается в корневой директории вашего проекта.
+* Исходный код отправляется в директорию `src`.
+* Стандартный файл библиотеки расположен по адресу `src/lib.rs`.
+* Стандартный исполняемый файл находится по адресу `src/main.rs`.
+* Другие исполняемые файлы могут быть расположены в `src/bin/*.rs`.
+* Интеграционные тесты находятся в директории `tests` (юнит тесты в том файле, который они тестируют).
+* Исполняемые примеры распологаются в директории `examples`.
+* Бенчмарки хранятся в директории `benches`.
 
-These are explained in more detail in the [manifest
-description](manifest.html#the-project-layout).
+Более детально это рассмотрено в [описание манифеста](manifest.html#the-project-layout).
 
 # Cargo.toml vs Cargo.lock
 
-`Cargo.toml` and `Cargo.lock` serve two different purposes. Before we talk
-about them, here’s a summary:
+`Cargo.toml` и `Cargo.lock` служат для двух разных целей. Перед тем, как мы начнем говорить об этом, рассмотрим небольшое изложение того, что мы изучили ранее:
 
-* `Cargo.toml` is about describing your dependencies in a broad sense, and is written by you.
-* `Cargo.lock` contains exact information about your dependencies. It is maintained by Cargo and should not be manually edited.
+* `Cargo.toml` - необходим для описания зависимостей, которые добавляете вы.
+* `Cargo.lock` - хранит в себе точную информацию о зависимостях. Его создает Cargo и он не должен изменяться в ручную.
 
-If you’re building a library that other projects will depend on, put
-`Cargo.lock` in your `.gitignore`. If you’re building an executable like a
-command-line tool or an application, check `Cargo.lock` into `git`. If you're
-curious about why that is, see ["Why do binaries have `Cargo.lock` in version
-control, but not libraries?" in the
+Если вы создаете библиотеку, которую будут использовать другие проекты в качестве зависимости, добавьте `Cargo.lock` в ваш `.gitignore` файл. Если вы создаете исполняемые файлы, например,
+консольную программу, добавьте `Cargo.lock` в ваш `git` репозиторий. Если вам интересно, почему это так, прочитайте ["Почему приложения хранят в репозитории `Cargo.lock`, а библиотеки нет?" в
 FAQ](faq.html#why-do-binaries-have-cargolock-in-version-control-but-not-libraries).
 
-Let’s dig in a little bit more.
+Давайте копнем немного глубже.
 
-`Cargo.toml` is a **manifest** file in which we can specify a bunch of
-different metadata about our project. For example, we can say that we depend
-on another project:
+`Cargo.toml` - это файл **манифеста**, в котором вы можете указать кучу разных метаданных о проекте. Например, мы можем указать, что мы зависим от другого проекта:
 
 ```toml
 [package]
@@ -275,31 +246,21 @@ authors = ["Your Name <you@example.com>"]
 rand = { git = "https://github.com/rust-lang-nursery/rand.git" }
 ```
 
-This project has a single dependency, on the `rand` library. We’ve stated in
-this case that we’re relying on a particular Git repository that lives on
-GitHub. Since we haven’t specified any other information, Cargo assumes that
-we intend to use the latest commit on the `master` branch to build our project.
+Этот проект имеет одну зависимость - библиотеку `rand`. В данном примере мы указатели в качестве зависимости конкретный git репозиторий, расположенный на GitHub. Т.к мы не указали какой-либо другой информации, Cargo предполагает, что мы будем использовать последний коммит с ветки `master`, чтобы собрать наш проект.
 
-Sound good? Well, there’s one problem: If you build this project today, and
-then you send a copy to me, and I build this project tomorrow, something bad
-could happen. There could be more commits to `rand` in the meantime, and my
-build would include new commits while yours would not. Therefore, we would
-get different builds. This would be bad because we want reproducible builds.
+Звучит круто? Ну, есть одна проблема: Если вы собрали ваш проект сегодня, а потом отправили копию мне, но, я соберу его только завтра, может случится что-то плохое. В репозитории `rand` могут появиться новые коммиты, и моя сборка будет содержать новые коммиты, а ваша - нет.
+Таким образом, мы получим разные сборки. Это не очень хорошо, так как мы хотим получать воспроизводимые сборки.
 
-We could fix this problem by putting a `rev` line in our `Cargo.toml`:
+Мы можем решить данную проблему, добавив `rev` в строку с зависимостью в файле `Cargo.toml`:
 
 ```toml
 [dependencies]
 rand = { git = "https://github.com/rust-lang-nursery/rand.git", rev = "9f35b8e" }
 ```
 
-Now our builds will be the same. But there’s a big drawback: now we have to
-manually think about SHA-1s every time we want to update our library. This is
-both tedious and error prone.
+Теперь сборки будут одинаковые. Но есть небольшой недостаток: теперь нам нужно обновлять SHA-1 хеш коммита каждый раз, когда мы захотим обновить версию библиотеки. Это так утомительно и может привести к ошибкам!
 
-Enter the `Cargo.lock`. Because of its existence, we don’t need to manually
-keep track of the exact revisions: Cargo will do it for us. When we have a
-manifest like this:
+Вспомним про `Cargo.lock`. Благодаря нему нам не обязательно каждый раз в ручную указывать точную версию библиотеки, которую мы будем использовать. Cargo сделает это за нас. Все, что нам нужно - это манифест. Например, вот такой:
 
 ```toml
 [package]
@@ -311,8 +272,7 @@ authors = ["Your Name <you@example.com>"]
 rand = { git = "https://github.com/rust-lang-nursery/rand.git" }
 ```
 
-Cargo will take the latest commit and write that information out into our
-`Cargo.lock` when we build for the first time. That file will look like this:
+Cargo заберет последний коммит и запишет эту информацию в ваш `Cargo.lock` во время первой сборки. Этот файл будет выглядеть вот так:
 
 ```toml
 [root]
@@ -329,34 +289,25 @@ source = "git+https://github.com/rust-lang-nursery/rand.git#9f35b8e439eeedd60b94
 
 ```
 
-You can see that there’s a lot more information here, including the exact
-revision we used to build. Now when you give your project to someone else,
-they’ll use the exact same SHA, even though we didn’t specify it in our
-`Cargo.toml`.
+Как вы можете видеть, в `Cargo.lock` довольно много информации. Включая точную версию библиотеки, которую мы будем использовать для сборки. Теперь, если мы передаем проект кому-то другому, то сборки проекта будут одинаковые и нам не нужно обновлять хеш коммита каждый раз. Нам даже не нужно его указывать в `Cargo.toml`, т.к Cargo сам заберет последний коммит.
 
-When we’re ready to opt in to a new version of the library, Cargo can
-re-calculate the dependencies and update things for us:
+Когда мы будем готовы выпустить новую версию библиотеки, Cargo может заново просчитать зависимости и обновить их для нас:
 
 ```shell
 $ cargo update           # updates all dependencies
 $ cargo update -p rand  # updates just “rand”
 ```
 
-This will write out a new `Cargo.lock` with the new version information. Note
-that the argument to `cargo update` is actually a
-[Package ID Specification](pkgid-spec.html) and `rand` is just a short
-specification.
+Эта команда создаст новый `Cargo.lock` с новой информацией о версиях зависимостей.
+Обратите внимания, что аргумент для `cargo update` является
+[идентификатор пакета](pkgid-spec.html) и `rand` это сокращенная запись идентификатора.
 
-# Tests
+# Тесты
 
-Cargo can run your tests with the `cargo test` command. Cargo looks for tests
-to run in two places: in each of your `src` files and any tests in `tests/`.
-Tests in your `src` files should be unit tests, and tests in `tests/` should be
-integration-style tests. As such, you’ll need to import your crates into
-the files in `tests`.
+Cargo запустит ваши тесты с помощью команды `cargo test`. Cargo запускает тесты из двух мест: из вашей `src` директории, а так же в директории `tests/`.
+Тесты в ваших `src` файла должны быть юнит тестами, а в папке `tests/` должны находиться интеграционные тесты. Таким образом, вам необходимо импортировать ваши контейнеры в интеграционные тесты.
 
-Here's an example of running `cargo test` in our project, which currently has
-no tests:
+Давайте рассмотрим пример запуска `cargo test` в нашем проекте, в котором, на данный момент, нет тестов:
 
 <pre><code class="language-shell"><span class="gp">$</span> cargo test
 <span style="font-weight: bold"
@@ -371,26 +322,22 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured
 </code></pre>
 
-If our project had tests, we would see more output with the correct number of
-tests.
+Если в вашем проекте есть тесты, вы должны увидеть вывод с правильным количеством тестов.
 
-You can also run a specific test by passing a filter:
+Вы так же можете запустить определенные тесты, передавая фильтр:
 
 <pre><code class="language-shell"><span class="gp">$</span> cargo test foo
 </code></pre>
 
-This will run any test with `foo` in its name.
+Эта команда запустит все тесты, у которых есть `foo` в название.
 
-`cargo test` runs additional checks as well. For example, it will compile any
-examples you’ve included and will also test the examples in your
-documentation. Please see the [testing guide][testing] in the Rust
-documentation for more details.
+`cargo test` может проводить дополнительные проверки. Например, скомпилирует все примеры, которые вы добавите и протестирует примеры в вашей документации. Более подробно можно прочитать в [разделе тестирования][testing] документации по языку программирования Rust.
 
 [testing]: https://doc.rust-lang.org/book/testing.html
 
 ## Travis CI
 
-To test your project on Travis CI, here is a sample `.travis.yml` file:
+Вы можете тестировать ваш проект с помощью Travis CI. Пример `.travis.yml` файла:
 
 ```
 language: rust
@@ -403,17 +350,12 @@ matrix:
     - rust: nightly
 ```
 
-This will test all three release channels, but any breakage in nightly
-will not fail your overall build. Please see the [Travis CI Rust
-documentation](https://docs.travis-ci.com/user/languages/rust/) for more
-information.
+В данном случае ваш код будет протестирован на всех трех доступных ветках Rust, но все ошибки сборки на nightly сборке не приведет к ошибке всего билда. Пожалуйста, ознакомьтесь с [документацией Travis CI для языка Rust](https://docs.travis-ci.com/user/languages/rust/) чтобы получить более подробную информацию.
 
-# Further reading
+# Что дальше?
 
-Now that you have an overview of how to use cargo and have created your first crate, you may be interested in:
+Теперь, когда у вас есть представления, как использовать cargo, как создать свой первый контейнер, вам будет интересно почитать следующее:
 
-* [Publishing your crate on crates.io](crates-io.html)
-* [Reading about all the possible ways of specifying dependencies](specifying-dependencies.html)
-* [Learning more details about what you can specify in your `Cargo.toml` manifest](manifest.html)
-
-Even more topics are available in the Docs menu at the top!
+* [Как опубликовать ваш контейнер на crates.io](crates-io.html)
+* [Все возможные способы указания зависимостей](specifying-dependencies.html)
+* [Узнать подробнее о том, что можно включить в манифест `Cargo.toml`](manifest.html)
