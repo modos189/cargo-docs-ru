@@ -1,7 +1,6 @@
 /target
 .cargo
 /config.stamp
-/Makefile
 /config.mk
 src/doc/build
 src/etc/*.pyc
