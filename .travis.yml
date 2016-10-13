@@ -2,11 +2,12 @@ language: rust
 rust:
 - stable
 sudo: false
+before_script:
+- git config --global user.email "Igor.Shaposhnik"
+- git config --global user.name "shaposhnikigor95@bk.ru"
 script:
 - make doc
 after_success: |
-  git config user.name "Igor.Shaposhnik"
-  git config user.email "shaposhnikigor95@bk.ru"
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
   [ $(uname -s) = Linux ] &&
@@ -15,7 +16,7 @@ after_success: |
   git push -qf https://${CDOC_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
 env:
   global:
-  - secure: GFn768YsX8U+PuK6KPEGO/OQAnR5HP2YIN0tNILw3QBEqRdYrLl0HphfXQb8F0NmD4ra5eIgKyEAvu5xNyshFkwR6LfAYnMbYbQdWjYKnWKkBg9bLW3tUBHH0uTz7SlT4BBnLwdjufUJBuMOjEX0h2ky+HiY9872Yq0upzk51RMZsAd0e3758Zqj7RXc2/e2MlpdmLQv4gOOguy0ewCeDYyTiy4chJTO26XN+/dZTQspPhkO8UoBB8NjXxzcSHRdkJux4p1tu5UobMejxKJXuVGqMbVmnjofFv4ATQZrt8/XCJJlR40+6oZxC6vCCapfC4FYdehaIBZQF23l9W3cfiiqbrhGIzJB8xOQL/IMLiK//MjXYdJv+XlbTJSS8Pp6IeVTsNCZRigxLtzxj4f9bztBS2l7h7RVPynLL/w55icIf+c6JSThWQofwLLzVwVVn2kQhx8N79Rufuojk8f+SiL+tAlBJhULFsmj8stvROzzFODPGisSQ2UQFgu6f1lhegufl5fr/CWCNGpL0A/q0nXUiVVkaBAg3cROvNXEKx5vFw/0kgNOAVRq/PflU4Vg7L31AR2s8SOMuf4+dpxueiiayOPOxFz00l/LfKFDRL+PJYZvGQhKqTB+meY2syM6ydtClHX+vJCYfPLJWxCfPYgbfLBE0+tjBKiFfSpdrYE=
+  - secure: dGdvTkbweREdpaRQWzq9w837ibv3rLjI2fRq+BRh/pJt3imPQa8FMw8m3OoS9p/y4GlYDSu3p+aLCktH3ulRqtC0iAzy0BhnvVG6xJhnL2YRawJiA3bz//iaLdWZVd9gnu+UR1xFYA/ZzjpDrdq+9f37uYRClonDXz9wl01WCe0AiQ69LEe4MEedYNBwhYvDK6YPoWF4X0AF42uebuCwb4xLsFwzFGt4R/xZ7MU7SAFgZxsy+xEORbP5qqRUo2kG6BHxDfJlN9V966Iw5aViK6xLUarUKYSmDtIlGeLwuI+Zjvx/ompgfaq7YSSkGoD7QIWS6v5/6nB61drIT+43oWZ87r4YuRuRthTGNSadsmnzB0YIin9RNyHm6LabF9ykLaMARJI/dSy5nMyFpEA5qrda7nxrJJPFnWX2UVsRtEyGezXSYxVqM4OftCxAIy8rHQplzGVjzHzbby+M1sCoyCtkt5jz65ii6wgH7e/el8BC4nT0h0MV2X7HMqNO7nebYgctkWtHeH6ZLfMUuL6YbHdWqFk9mFNr/4S0vBO7qK5rZRD3oqzNw2nWwwojbl1oRhsVV8kA6tSNNXCgPbK4/qlKMK0rsTkRlO09aDyZOAcjKy1AY8daAomPYTigfWBy0CF/Jt7JLdfavaElA+FykhVQLrrCENzDGI2L0wsEE9A=
 os:
 - linux
 branches:
