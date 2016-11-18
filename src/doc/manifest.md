@@ -484,7 +484,9 @@ specified.
 
 [lib]
 # The name of a target is the name of the library that will be generated. This
-# is defaulted to the name of the package or project.
+# is defaulted to the name of the package or project, with any dashes replaced
+# with underscores. (Rust `extern crate` declarations reference this name;
+# therefore the value must be a valid Rust identifier to be usable.)
 name = "foo"
 
 # This field points at where the crate is located, relative to the `Cargo.toml`.
@@ -508,6 +510,10 @@ doc = true
 # for Cargo to correctly compile it and make it available for all dependencies.
 plugin = false
 
+# If the target is meant to be a "macros 1.1" procedural macro, this field must
+# be set to true.
+proc-macro = false
+
 # If set to false, `cargo test` will omit the `--test` flag to rustc, which
 # stops it from generating a test harness. This is useful when the binary being
 # built manages the test runner itself.
@@ -527,9 +533,13 @@ name = "..."
 crate-type = ["dylib"] # could be `staticlib` as well
 ```
 
-The available options are `dylib`, `rlib`, and `staticlib`. You should only use
-this option in a project. Cargo will always compile packages (dependencies)
-based on the requirements of the project that includes them.
+The available options are `dylib`, `rlib`, `staticlib`, `cdylib`, and
+`proc-macro`. You should only use this option in a project. Cargo will always
+compile packages (dependencies) based on the requirements of the project that
+includes them.
+
+You can read more about the different crate types in the
+[Rust Reference Manual](https://doc.rust-lang.org/reference.html#linkage)
 
 # The `[replace]` Section
 
@@ -545,9 +555,10 @@ other copies. The syntax is similar to the `[dependencies]` section:
 Each key in the `[replace]` table is a [package id
 specification](pkgid-spec.html) which allows arbitrarily choosing a node in the
 dependency graph to override. The value of each key is the same as the
-`[dependencies]` syntax for specifying dependencies. Note that when a crate is
-overridden the copy it's overridden with must have both the same name and
-version, but it can come from a different source (e.g. git or a local path).
+`[dependencies]` syntax for specifying dependencies, except that you can't
+specify features. Note that when a crate is overridden the copy it's overridden
+with must have both the same name and version, but it can come from a different
+source (e.g. git or a local path).
 
 More information about overriding dependencies can be found in the [overriding
 dependencies][replace] section of the documentation.

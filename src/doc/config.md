@@ -51,8 +51,9 @@ paths = ["/path/to/override"]
 name = "..."
 email = "..."
 
-# By default `cargo new` will initialize a new git repository. This key can be
-# set to `none` to disable this behavior.
+# By default `cargo new` will initialize a new Git repository. This key can be
+# set to `hg` to create a Mercurial repository, or `none` to disable this
+# behavior.
 vcs = "none"
 
 # For the following sections, $triple refers to any valid target triple, not the
@@ -68,6 +69,9 @@ linker = ".."
 # Similar to the above linker configuration, but this only applies to
 # when the `$triple` is being compiled for.
 linker = ".."
+# custom flags to pass to all compiler invocations that target $triple
+# this value overrides build.rustflags when both are present
+rustflags = ["..", ".."]
 
 # Configuration keys related to the registry
 [registry]

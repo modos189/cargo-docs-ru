@@ -307,10 +307,10 @@ winhttp = "0.4.0"
 [target.'cfg(unix)'.dependencies]
 openssl = "1.0.1"
 
-[target.'cfg(target_pointer_width = "32")'.dependencies]
+[target.'cfg(target_arch = "x86")'.dependencies]
 native = { path = "native/i686" }
 
-[target.'cfg(target_pointer_width = "64")'.dependencies]
+[target.'cfg(target_arch = "x86_64")'.dependencies]
 native = { path = "native/x86_64" }
 ```
 
@@ -384,7 +384,26 @@ manifest:
 gcc = "0.3"
 ```
 
-The build script **does not** have access to the dependencies listed in the
-`dependencies` or `dev-dependencies` section (they’re not built yet!). All build
-dependencies will also not be available to the package itself unless listed
-under the `dependencies` section as well.
+The build script **does not** have access to the dependencies listed
+in the `dependencies` or `dev-dependencies` section. Build
+dependencies will likewise not be available to the package itself
+unless listed under the `dependencies` section as well. A package
+itself and its build script are built separately, so their
+dependencies need not coincide. Cargo is kept simpler and cleaner by
+using independent dependencies for independent purposes.
+
+# Choosing features
+
+If a package you depend on offers conditional features, you can
+specify which to use:
+
+```toml
+[dependencies.awesome]
+version = "1.3.5"
+default-features = false # do not include the default features, and optionally
+                         # cherry-pick individual features
+features = ["secure-password", "civet"]
+```
+
+More information about features can be found in the
+[manifest documentation](manifest.html#the-features-section).
