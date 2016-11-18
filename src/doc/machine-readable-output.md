@@ -1,21 +1,22 @@
-% Machine readable output.
+% Машиночитаемый вывод.
 
+Cargo может выдавать информацию о вашей сборке и вашем проекте в формате JSON.
 Cargo can output information about project and build in JSON format.
 
-# Information about project structure
+# Информация о структуре проекта
 
-You can use `cargo metadata` command to get information about project structure
-and dependencies. The output of the command looks like this:
+Вы можете использовать команду `cargo metadata` чтобы получить информацию о структуре проекта
+и зависимостях. Вывод данной команды будет примерно таким:
 
 ```text
 {
-  // Integer version number of the format.
+  // Версия формата сообщений .
   "version": integer,
 
-  // List of packages for this workspace, including dependencies.
+  // Список пакетов для проекта, включая зависимости.
   "packages": [
     {
-      // Opaque package identifier.
+      // Уникальный идентификатор пакета.
       "id": PackageId,
 
       "name": string,
@@ -24,19 +25,19 @@ and dependencies. The output of the command looks like this:
 
       "source": SourceId,
 
-      // A list of declared dependencies, see `resolve` field for actual dependencies.
+      // Список объявленных зависимостей. Используемые зависимости описаны в пол `resolve`.
       "dependencies": [ Dependency ],
 
       "targets: [ Target ],
 
-      // Path to Cargo.toml
+      // Путь до Cargo.toml
       "manifest_path": string,
     }
   ],
 
   "workspace_members": [ PackageId ],
 
-  // Dependencies graph.
+  // Граф зависимостей.
   "resolve": {
      "nodes": [
        {
@@ -49,30 +50,29 @@ and dependencies. The output of the command looks like this:
 ```
 
 
-# Compiler errors
+# Ошибки компилятора
 
-If you supply `--message-format json` to commands like `cargo build`, Cargo
-reports compilation errors and warnings in JSON format. Messages go to the
-standard output. Each message occupies exactly one line and does not contain
-internal `\n` symbols, so it is possible to process messages one by one
-without waiting for the whole build to finish.
+Если вы добавите параметр `--message-format json` для команд типа `cargo build`, Cargo
+выдаст ошибки и предупреждения компилятора в формате JSON. Сообщения будут выведены в 
+стандартный поток вывода. Каждое сообщение занимает ровно одну строчку и не содержит в себе
+символа перевода строки `\n`. Благодаря этому их можно обрабатывать не дожидаясь окончания сборки.
 
-The message format looks like this:
+Формат сообщений выглядит примерно так:
 
 ```text
 {
-  // Type of the message.
+  // Тип сообщения.
   "reason": "compiler-message",
 
-  // Unique opaque identifier of compiled package.
+  // Уникальный идентификатор компилируемого пакета.
   "package_id": PackageId,
 
-  // Unique specification of a particular target within the package.
+  // Уникальный идентификатор для типа сборки (например, bin)
   "target": Target,
 
-  // The error message from the compiler in JSON format.
+  // Сообщение от компилятора в формате JSON.
   "message": {...}
 }
 ```
 
-Package and target specification are the same that `cargo metadata` uses.
+Спецификация пакетов и типов сборки такая же как и у `cargo metadata`.
