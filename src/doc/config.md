@@ -1,15 +1,15 @@
-% Configuration
+% Настройка Cargo
 
-This document will explain how Cargo’s configuration system works, as well as
-available keys or configuration.  For configuration of a project through its
-manifest, see the [manifest format](manifest.html).
+В данном документе мы расскажем вам, как работает настройка Cargo, используя доступные для
+конфигурации ключи и настройки. Для настройке проекта с помощью манифест файла, загляните на 
+страницу [формат манифеста](manifest.html).
 
-# Hierarchical structure
+# Иерархическая структура
 
-Cargo allows to have local configuration for a particular project or global
-configuration (like git). Cargo also extends this ability to a hierarchical
-strategy. If, for example, Cargo were invoked in `/home/foo/bar/baz`, then the
-following configuration files would be probed for:
+Cargo позволяет делать настройки как для локальных проектов, так и для
+всех (как git, например). Cargo также расширяет эту возможность используя иерархическую
+структуру. Если, например, Cargo будет вызван в директории `/home/foo/bar/baz`, то поиск 
+конфигурационных файлов будет осуществлен по следующим директориям:
 
 * `/home/foo/bar/baz/.cargo/config`
 * `/home/foo/bar/.cargo/config`
@@ -17,90 +17,91 @@ following configuration files would be probed for:
 * `/home/.cargo/config`
 * `/.cargo/config`
 
-With this structure you can specify local configuration per-project, and even
-possibly check it into version control. You can also specify personal default
-with a configuration file in your home directory.
+Благодаря такой структуре вы можете указывать конфигурацию для каждого проекта отдельно, и даже,
+возможно, добавлять его в вашу систему контроля версий. Вы также можете указать
+нужную вам конфигурацию в файле в домашней директории.
 
-# Configuration format
+# Формат конфигурационного файла
 
-All configuration is currently in the [TOML format][toml] (like the manifest),
-with simple key-value pairs inside of sections (tables) which all get merged
-together.
+Все конфигурационные файлы хранятся в [TOML формате][toml] (как манифесты),
+в простом формате ключ-значение, которые хранятся внутри секций (таблиц), а потом будут объединены.
 
 [toml]: https://github.com/toml-lang/toml
 
-# Configuration keys
+# Ключи для конфигурации
 
-All of the following keys are optional, and their defaults are listed as their
-value unless otherwise noted.
+Все последующие ключи являются опциональными. Также стоит ответить, что мы указывали
+значения по умолчанию для каждого значения.
 
-Key values that specify a tool may be given as an absolute path, a relative path
-or as a pathless tool name. Absolute paths and pathless tool names are used as
-given. Relative paths are resolved relative to the parent directory of the
-`.cargo` directory of the config file that the value resides within.
+Ключи для значений, которые указывают на определенную программу, могут быть в формате абсолютного
+пути, относительного, а также можно просто указать название программы. Абсолютные пути и 
+название программ используются как есть. Относительные пути используются исходя из родительской 
+директории, в которой расположена директория `.cargo`, в которой находится конфигурационный файл. 
 
 ```toml
-# An array of paths to local repositories which are to be used as overrides for
-# dependencies. For more information see the Specifying Dependencies guide.
+# Массив путей к локальным репозиториям, которые будут переопределены в качестве
+# зависимостей. Для более подробной информации смотрите документ Specifying Dependencies.
 paths = ["/path/to/override"]
 
 [cargo-new]
-# This is your name/email to place in the `authors` section of a new Cargo.toml
-# that is generated. If not present, then `git` will be probed, and if that is
-# not present then `$USER` and `$EMAIL` will be used.
+# Настройки для имени/email, которые будут помещены в блок `authors` в новых Cargo.toml
+# Если эти параметры не указаны, будут взяты параметры из конфигурации `git`. А, если и их нет
+# запишутся `$USER` и `$EMAIL`.
 name = "..."
 email = "..."
 
-# By default `cargo new` will initialize a new Git repository. This key can be
-# set to `hg` to create a Mercurial repository, or `none` to disable this
-# behavior.
+# По умолчанию команда `cargo new` создан новый Git репозиторий. Это значение может быть
+# изменено на `hg`, тогда будет создан Mercurial репозиторий, или `none`, чтобы отключить
+# данный функционал.
 vcs = "none"
 
-# For the following sections, $triple refers to any valid target triple, not the
-# literal string "$triple", and it will apply whenever that target triple is
-# being compiled to.
+# Для следующего раздела, $triple относится к любой возможной целевой платформой,
+# не к строкову литералу "$triple", и будет применяться каждый раз, когда будет сборка
+# для целевой платформы.
 [target]
-# For Cargo builds which do not mention --target, this is the linker
-# which is passed to rustc (via `-C linker=`). By default this flag is not
-# passed to the compiler.
+# Для сборок Cargo, для которых не указан параметр --target, будет использован компоновщик
+# переданный в rustc (с помощью `-C linker=`). По умолчанию этот флаг не передан
+# как параметр компилятора.
 linker = ".."
 
 [target.$triple]
-# Similar to the above linker configuration, but this only applies to
-# when the `$triple` is being compiled for.
+# Этот раздел похож на раздел, который был описан выше, но тут указывается конкретная
+# целевая платформа, которая будет скомпилирована.
 linker = ".."
-# custom flags to pass to all compiler invocations that target $triple
-# this value overrides build.rustflags when both are present
+# пользовательские настройки будут переданы в компилятор, каждый раз когда будет $triple
+# вызвана компиляция для целевой платформы.
+# этот параметр переопределит build.rustflags, если он указан
 rustflags = ["..", ".."]
 
-# Configuration keys related to the registry
+# Настройки для реестра
 [registry]
-index = "..."   # URL of the registry index (defaults to the central repository)
-token = "..."   # Access token (found on the central repo’s website)
+index = "..."   # Ссылка для индекса реестра (по умолчанию - центральный репозиторий)
+token = "..."   # Ключ доступа (можно найти на сайте центрального репозитория)
 
 [http]
-proxy = "..."       # HTTP proxy to use for HTTP requests (defaults to none)
-timeout = 60000     # Timeout for each HTTP request, in milliseconds
-cainfo = "cert.pem" # Path to Certificate Authority (CA) bundle (optional)
+proxy = "..."       # HTTP прокси. Используется для HTTP запросов (по умолчанию не указан)
+timeout = 60000     # Таймаут для каждого HTTP запроса, в миллисекундах
+cainfo = "cert.pem" # Путь до ключа Центра Сертификации (опционально)
 
 [build]
-jobs = 1                  # number of parallel jobs, defaults to # of CPUs
-rustc = "rustc"           # the rust compiler tool
-rustdoc = "rustdoc"       # the doc generator tool
+jobs = 1                  # количество параллельно выполняемых заданий, по умолчанию - 
+                          # количество ЦП
+rustc = "rustc"           # компилятор rust
+rustdoc = "rustdoc"       # инструмент генерации документации
 target = "triple"         # build for the target triple
-target-dir = "target"     # path of where to place all generated artifacts
-rustflags = ["..", ".."]  # custom flags to pass to all compiler invocations
+target-dir = "target"     # путь к директории, в которой будет скомпилированный проект
+rustflags = ["..", ".."]  # настройки, которые будут переданы компилятору
 
 [term]
-verbose = false        # whether cargo provides verbose output
-color = 'auto'         # whether cargo colorizes output
+verbose = false        # предоставлять ли cargo развернутый вывод
+color = 'auto'         # предоставлять ли cargo цветной вывод
 
-# Network configuration
+# Конфигурация сети
 [net]
-retry = 2 # number of times a network call will automatically retried
+retry = 2 # сколько раз будет вызвана попытка повторной отправки сигнала
 
-# Alias cargo commands. The first 3 aliases are built in. If your
-# command requires grouped whitespace use the list format.
+# Псевдонимы для команд Cargo. Первые 3 псевдонима встроены.
+# Если вы хотите передать параметры в псевдоним, в которых есть пробелы, то используйте список.
 [alias]
 b = "build"
 t = "test"
@@ -109,18 +110,17 @@ rr = "run --release"
 space_example = ["run", "--release", "--", "\"command list\""]
 ```
 
-# Environment variables
+# Переменные среды
 
-Cargo can also be configured through environment variables in addition to the
-TOML syntax above. For each configuration key above of the form `foo.bar` the
-environment variable `CARGO_FOO_BAR` can also be used to define the value. For
-example the `build.jobs` key can also be defined by `CARGO_BUILD_JOBS`.
+Cargo также можно настроить с помощью переменных среды, в дополнение к 
+TOML конфигурационным файлам. Для каждой настройки `foo.bar` 
+есть переменная среды `CARGO_FOO_BAR` для которой также можно указать значение.
+Например, настройка `build.jobs` может быть указана с помощью переменной среды `CARGO_BUILD_JOBS`.
 
-Environment variables will take precedent over TOML configuration, and currently
-only integer, boolean, and string keys are supported to be defined by
-environment variables.
+Приоритет переменных среды выше, чем приоритет значений в TOML конфигурациях. В данный момент 
+в качестве значений для переменных среды можно указывать только целочисленные, логические и 
+строковые.
 
-In addition to the system above, Cargo recognizes a few other specific
-[environment variables][env].
+В дополнение к вышеперечисленному, Cargo работает и с другими [переменными среды][env].
 
 [env]: environment-variables.html
